@@ -1,0 +1,37 @@
+```{r}
+config <- list(
+    # general
+    'pathogen'            = 'l. major',
+    'host'                = 'h. sapiens',
+    'target'              = 'host',
+    'analysis_name'       = 'hsapiens-inf-with-lmajor-1.0',
+
+    # sample variables of interest
+    'sample_id'           = 'sample_id',
+    'condition'           = 'condition',
+    'batch'               = 'replicate',
+
+    # sample metadata
+    'samples'             = tbl_df(read.csv('hsapiens_samples.csv'))
+
+    # input count tables
+    "input_count_tables"  = file.path("counts/mmusculus/*.count"),
+
+    # normalization / data transformation
+    'de_cpm'                 = true,
+    'de_log2'                = true,
+    'de_voom'                = true,
+    'de_quantile_normalize'  = true,
+    'de_batch_adjust'        = 'combat',
+
+    # annotations
+    "organism_db"         = "homo.sapiens",
+    "orgdb_key"           = "ensembl",
+    "organism_genome"     = "hg38",
+    "biomart_dataset"     = "hsapiens_gene_ensembl",
+
+    # differential expression
+    "contrast_column"  = 'condition',
+    "de_comparisons"   = list(c('uninfected', 'infected')),
+)
+```

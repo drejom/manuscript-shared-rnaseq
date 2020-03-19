@@ -186,6 +186,17 @@ listed in `Rmd/settings/shared.Rmd`, `Rmd/settings/coex_network.Rmd`, and
 You can also refer to the manuscript specific repositories which show actual
 example of how this code is being used.
 
+## Bioconductor Docker 
+
+```sh
+docker run -d \
+   -v $(pwd):/home/rstudio/data \
+   -v $HOME/R:/usr/local/lib/R/host-site-library \
+   -e PASSWORD=bioc \
+   -p 6080:8787 \
+   bioconductor/bioconductor_docker_genomics:RELEASE_3_10
+```
+
 Contact Information
 ===================
 

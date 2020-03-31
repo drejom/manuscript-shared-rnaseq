@@ -186,32 +186,12 @@ listed in `Rmd/settings/shared.Rmd`, `Rmd/settings/coex_network.Rmd`, and
 You can also refer to the manuscript specific repositories which show actual
 example of how this code is being used.
 
-## Bioconductor Docker 
+## Bioconductor Genomics Docker 
 
-## Building Docker image
-
-To build the image, navigate to root directory with the `Dockerfile` and run
-
-``` sh
-time docker build -t denom/bioconductor_docker_genomics:latest . 2>&1 | tee docker.build.log
-```
-
-Note errors:
-
-``` sh
-grep "ERROR:" docker.build.log
-```
-
-## Pushing the image to DockerHub
-
-First login to Docker on the command line. Find the hash of the image
-
-`cat ~/.docker/my_password.txt | docker login --username denom --password-stdin`
-
-Then push to DockerHub
+The [Bioconductor Genomics](https://github.com/drejom/stat-genomics-docker) Docker container has all the required libraries installed and ready to go. 
 
 ```sh
-docker push denom/bioconductor_docker_genomics:latest
+docker pull denom/bioconductor_docker_genomics:latest
 ```
 
 ## Running the container
@@ -219,10 +199,9 @@ docker push denom/bioconductor_docker_genomics:latest
 ```sh
 docker run -d \
    -v $(pwd):/home/rstudio/data \
-   -v $HOME/R:/usr/local/lib/R/host-site-library \
    -e PASSWORD=bioc \
-   -p 6080:8787 \
-   bioconductor/bioconductor_docker_genomics:RELEASE_3_10
+   -p 8787:8787 \
+   denom/bioconductor_docker_genomics:latest
 ```
 
 Contact Information

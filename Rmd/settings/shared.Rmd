@@ -97,13 +97,14 @@ DEFAULT_CONFIG_SHARED <- list(
     'use_cache'           = TRUE,  # If true, knitr caching will be used to speed up the analysis on subsequent runs
     'verbose'             = TRUE,  # If true, additional outputs (tables, etc.) will be included in the results
 
+#Moved to analysis_settings_v1.0.Rmd    
     # Sample variables of interest
-    'sample_id'           = 'HPGL_ID',   # Column name indicating sample ID
-    'condition'           = 'Condition', # Column name indicating sample condition
-    'batch'               = 'Batch',     # Column name indicating sample batch
+#    'sample_id'           = 'HPGL_ID',   # Column name indicating sample ID
+#    'condition'           = 'Condition', # Column name indicating sample condition
+#    'batch'               = 'Batch',     # Column name indicating sample batch
 
     # Covariates
-    'covariates'          = c('Batch'),  # Vector of one or more sample covariates to test for correlation with expression
+#    'covariates'          = c('Batch'),  # Vector of one or more sample covariates to test for correlation with expression
 
     # Plotting
     'dpi'                 = 96,       # Default figure DPI

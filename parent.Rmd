@@ -1,0 +1,53 @@
+---
+title: "Example Differential Expression Manuscript"
+---
+
+```{r child='Rmd/init/header_de.Rmd'}
+```
+
+```{r child='analysis_settings_v1.0.Rmd'}
+```
+
+
+```{r child='Rmd/init/load_settings_de.Rmd'}
+```
+
+Methods
+=======
+
+```{r child='Rmd/init/load_counts.Rmd'}
+```
+
+```{r child='Rmd/init/load_host_annotations.Rmd'}
+```
+
+```{r child='Rmd/init/create_expression_set.Rmd'}
+```
+
+```{r child='Rmd/main/filter_counts.Rmd'}
+```
+
+```{r child='Rmd/main/gene_visualization.Rmd'}
+```
+
+```{r child='Rmd/main/data_prep_de.Rmd'}
+```
+
+```{r child='Rmd/main/differential_expression.Rmd'}
+```
+
+```{r child='Rmd/results/go_enrichment_de.Rmd'}
+```
+
+```{r child='Rmd/results/kegg_enrichment_de.Rmd'}
+```
+
+```{r child='Rmd/results/save_output_de.Rmd'}
+```
+
+Version Information
+===================
+
+```{r}
+sessionInfo()
+```

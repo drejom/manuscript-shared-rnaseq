@@ -62,14 +62,14 @@ covariates <- CONFIG$samples %>%
 # Design matrix; this may be updated later if batch adjustment is enabled
 design_condition_only  <- model.matrix(~0+condition)
 
-if (length(levels(batch)) > 0) {
+if (length(levels(batch)) > 1) {
     design_including_batch <- model.matrix(~0+condition+batch)
 }
 ```
 
 ### Load count tables
 
-Next, we will use HPGLTools `r citep(citation('hpgltools'))` to load in the count
+Next, we will use HPGLTools `#r citep(citation('hpgltools'))` to load in the count
 data for each sample. Throughout our analyses we will apply several different
 types of filters and data transformations.  Since the exact types of
 normalization and filtering procedures we will want to apply may differ,
@@ -100,7 +100,7 @@ raw and log2cpm transformed count matrices, everything for "normed" onwards
 will depend on the exact parameters of the analysis, as specified in the
 settings.
 
-```{r prepare_count_matrix, message=FALSE, results='asis', cache=CONFIG$use_cache, cache.lazy=FALSE, autodep=TRUE}
+```{r prepare_count_matrix,  results='asis', cache=CONFIG$use_cache, cache.lazy=FALSE, autodep=TRUE}
 message("Preparing count matrix")
 
 # Use pre-loaded count table
@@ -133,27 +133,9 @@ if (is.data.frame(CONFIG$input_count_tables)) {
         # Load combined count table
         # TODO: Generalize so that counts stored in arbitrary formats can be loaded
         count_table <- read.table(CONFIG$input_count_tables, header=TRUE,
-                                  row.names=1, check.names=FALSE) 
-    } else {
-        # iterate over per-sample counts and append to count matrix
-        count_table <- read.delim(count_files[1], header = FALSE, row.names = 1)
-
-        COUNT_COLUMN_IDX <- 2
-
-        for (infile in count_files[2:length(count_files)]) {
-          sample_counts <- read.delim(infile, header = FALSE)
-          count_table <- cbind(count_table, sample_counts[, COUNT_COLUMN_IDX])
-        }
-
-        # fix column names
-        colnames(count_table) <- file_path_sans_ext(basename(count_files))
-
-        count_table <- as.matrix(count_table)
-    }
-
-    # Make sure HTSeq meta-columns are removed (should be taken care of in
-    # recent versions of HPGLtools)
-    count_table <- count_table[!grepl('^X?__', rownames(count_table)),]
+                                  row.names=1, check.names=FALSE)
+        count_table$gene_name <- NULL
+    } 
 }
 
 # Remove ENSEMBL gene id version, if present
@@ -198,7 +180,7 @@ colors <- pal[as.numeric(condition)]
 
 # for smaller number of samples, use a bar plot
 if (ncol(count_table) <= 20) {
-  plot_libsize(count_table, condition, colors=colors, scale=FALSE)
+  #plot_libsize(count_table, condition, colors=colors, scale=FALSE)
 } else {
   # for larger numbers of samples, use a densit plots instead
   dat <- data.frame(size = apply(count_table, 2, sum), condition)

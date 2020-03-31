@@ -1,0 +1,41 @@
+```{r}
+CONFIG <- list(
+    # general
+    'pathogen'            = 'NULL',
+    'host'                = 'H. sapiens',
+    'target'              = 'host',
+    'analysis_name'       = 'russell_etal',
+
+    # sample variables of interest
+    'sample_id'           = 'sample',
+    'condition'           = 'group',
+    'batch'               = 'batch',
+    
+    # Covariates
+    'covariates'          = c('batch', 'sex', 'age'),  # Vector of one or more sample covariates to test for correlation with expression
+
+
+    # sample metadata
+    'samples'             = tbl_df(read.delim("/net/isi-dcnl/ifs/user_data/kmorris/Group/omeally/CGT.shevchenko.mRNAseq.T1D_Bcells.Jan2020/devel/russell_etal/coldata.txt")),
+
+    # input count tables
+    "input_count_tables"  = file.path('/net/isi-dcnl/ifs/user_data/kmorris/Group/omeally/CGT.shevchenko.mRNAseq.T1D_Bcells.Jan2020/devel/russell_etal/merged_gene_counts_modified.txt'),
+
+    # normalization / data transformation
+    'de_cpm'                 = TRUE,
+    'de_log2'                = TRUE,
+    'de_voom'                = TRUE,
+    'de_quantile_normalize'  = TRUE,
+    'de_batch_adjust'        = 'combat',
+
+    # annotations
+    "organism_db"         = "Homo.sapiens",
+    "orgdb_key"           = "ENSEMBL",
+    "organism_genome"     = "hg38",
+    "biomart_dataset"     = "hsapiens_gene_ensembl",
+
+    # differential expression
+    "contrast_column"  = 'group',
+    "de_comparisons"   = list(c('control', 'T1D'))
+)
+```

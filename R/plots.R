@@ -1,3 +1,118 @@
+# plot_libsize() stolen from:
+# https://github.com/elsayed-lab/hpgltools/blob/6a9674c02a771368f841b48041db88c89057d0c7/R/plot_bar.r
+#' Make a ggplot graph of library sizes.
+#'
+#' It is often useful to have a quick view of which samples have more/fewer
+#' reads.  This does that and maintains one's favorite color scheme and tries to
+#' make it pretty!
+#'
+#' @param data Expt, dataframe, or expressionset of samples.
+#' @param condition vector of sample condition names.
+#' @param colors Color scheme if the data is not an expt.
+#' @param text Add the numeric values inside the top of the bars of the plot?
+#' @param order  Explicitly set the order of samples in the plot?
+#' @param title Title for the plot.
+#' @param yscale Whether or not to log10 the y-axis.
+#' @param expt_names  Design column or manually selected names for printing sample names.
+#' @param label_chars Maximum number of characters before abbreviating sample names.
+#' @param ... More parameters for your good time!
+#' @return a ggplot2 bar plot of every sample's size
+#' @seealso \pkg{ggplot2}
+#'  \code{\link[ggplot2]{geom_bar}} \code{\link[ggplot2]{geom_text}}
+#'  \code{\link{prettyNum}} \code{\link[ggplot2]{scale_y_log10}}
+#' @examples
+#' \dontrun{
+#'  libsize_plot <- plot_libsize(expt=expt)
+#'  libsize_plot  ## ooo pretty bargraph
+#' }
+#' @export
+plot_libsize <- function(data, condition=NULL, colors=NULL,
+                         text=TRUE, order=NULL, title=NULL,  yscale=NULL,
+                         expt_names=NULL, label_chars=10,
+                         ...) {
+  arglist <- list(...)
+  if (is.null(text)) {
+    text <- TRUE
+  }
+  
+  ## In response to Keith's recent comment when there are more than 8 factors
+  chosen_palette <- "Dark2"
+  if (!is.null(arglist[["palette"]])) {
+    chosen_palette <- arglist[["palette"]]
+  }
+  design <- NULL
+  data_class <- class(data)[1]
+  if (data_class == "expt") {
+    design <- pData(data)
+    condition <- design[["condition"]]
+    colors <- data[["colors"]]
+    mtrx <- exprs(data)
+  } else if (data_class == "ExpressionSet") {
+    design <- pData(data)
+    condition <- design[["condition"]]
+    mtrx <- exprs(data)
+  } else if (data_class == "matrix" | data_class == "data.frame") {
+    ## some functions prefer matrix, so I am keeping this explicit for the moment
+    mtrx <- as.data.frame(data)
+  } else {
+    stop("This function understands types: expt, ExpressionSet, data.frame, and matrix.")
+  }
+  
+  if (is.null(colors)) {
+    colors <- grDevices::colorRampPalette(
+      RColorBrewer::brewer.pal(ncol(mtrx),
+                               chosen_palette))(ncol(mtrx))
+  }
+  
+  ## Get conditions
+  if (is.null(condition)) {
+    stop("Missing condition label vector.")
+  }
+  
+  values <- as.numeric(mtrx)
+  integerp <- all.equal(values, as.integer(values))
+  
+  colors <- as.character(colors)
+  sum <- NULL
+  
+  if (!is.null(expt_names) & class(expt_names) == "character") {
+    if (length(expt_names) == 1) {
+      colnames(mtrx) <- make.names(design[[expt_names]], unique=TRUE)
+    } else {
+      colnames(mtrx) <- expt_names
+    }
+  }
+  if (!is.null(label_chars) & is.numeric(label_chars)) {
+    colnames(mtrx) <- abbreviate(colnames(mtrx), minlength=label_chars)
+  }
+  
+  libsize_df <- data.frame("id" = colnames(mtrx),
+                           "sum" = colSums(mtrx),
+                           "condition" = condition,
+                           "colors" = as.character(colors))
+  summary_df <- data.table::setDT(libsize_df)[, list("min"=min(sum),
+                                                     "1st"=quantile(x=sum, probs=0.25),
+                                                     "median"=median(x=sum),
+                                                     "mean"=mean(sum),
+                                                     "3rd"=quantile(x=sum, probs=0.75),
+                                                     "max"=max(sum)),
+                                              by="condition"]
+  libsize_plot <- plot_sample_bars(libsize_df, condition=condition, colors=colors,
+                                   text=text, order=order, title=title, integerp=integerp,
+                                   yscale=yscale, ...)
+  ##libsize_plot <- plot_sample_bars(libsize_df, condition=condition, colors=colors,
+  ##                                 text=text, order=order, title=title, integerp=integerp,
+  ##                                 yscale=yscale)
+  retlist <- list(
+    "plot" = libsize_plot,
+    "table" = libsize_df,
+    "summary" = summary_df)
+  return(retlist)
+}
+
+
+
+
 #' Generates module-specific expression profile plots 
 #'
 #' Generates a grid of expression profile plots for each module, up to a

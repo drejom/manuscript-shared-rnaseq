@@ -188,6 +188,34 @@ example of how this code is being used.
 
 ## Bioconductor Docker 
 
+## Building Docker image
+
+To build the image, navigate to root directory with the `Dockerfile` and run
+
+``` sh
+time docker build -t denom/bioconductor_docker_genomics:latest . 2>&1 | tee docker.build.log
+```
+
+Note errors:
+
+``` sh
+grep "ERROR:" docker.build.log
+```
+
+## Pushing the image to DockerHub
+
+First login to Docker on the command line. Find the hash of the image
+
+`cat ~/.docker/my_password.txt | docker login --username denom --password-stdin`
+
+Then push to DockerHub
+
+```sh
+docker push denom/bioconductor_docker_genomics:latest
+```
+
+## Running the container
+
 ```sh
 docker run -d \
    -v $(pwd):/home/rstudio/data \

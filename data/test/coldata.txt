@@ -1,0 +1,18 @@
+sample	group	batch	age	sex
+SRR8081593	T1D	A	23	male
+SRR8081594	control	A	18	male
+SRR8081595	control	A	11	male
+SRR8081596	control	A	16	female
+SRR8081597	control	A	12	female
+SRR8081598	control	A	23	male
+SRR8081599	control	A	30	male
+SRR8081600	control	A	11	male
+SRR8081601	control	A	19	male
+SRR8081602	control	A	15	male
+SRR8081603	control	A	12	female
+SRR8081604	T1D	A	20	male
+SRR8081605	control	A	16	male
+SRR8081606	control	A	10	female
+SRR8081607	T1D	A	24	male
+SRR8081608	T1D	A	12	female
+
